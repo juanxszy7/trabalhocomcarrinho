@@ -15,7 +15,7 @@ export default {
         "5% de Cashback em todas as categorias",
         "20% OFF com o cupom CLICKLIVROS20 no pix parcelado",
         "Parcele em até 6x sem juros",
-        "Em compras acima de R$70,00 ganhe 10% de desconto"
+        "Em compras acima de R$50,00 ganhe 10% de desconto"
       ],
       anuncio: "",
       indice: 0

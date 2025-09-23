@@ -1,4 +1,5 @@
 <template>
+  <Anuncio/>
   <div class="header">
     <div class="logo-container">
       <RouterLink to="/">
@@ -25,11 +26,12 @@
 </template>
 
 <script>
+import Anuncio from "./Anuncio.vue";
 import Cart from "./Cart.vue";
 
 export default {
   name: "NavBar",
-  components: { Cart }
+  components: { Cart, Anuncio }
 };
 </script>
 

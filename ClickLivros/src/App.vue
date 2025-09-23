@@ -1,19 +1,16 @@
 <template>
-  <Anuncio/>
-  <NavBar/>
+  <NavBar class="fixed-navbar"/>
   <RouterView />
   <Footer/>
 </template>
 
 <script>
-import Anuncio from './components/Anuncio.vue';
 import Footer from './components/Footer.vue';
 import NavBar from './components/NavBar.vue';
 export default{
   name: 'App',
   components:{
     NavBar,
-    Anuncio,
     Footer
   }
 }
@@ -33,5 +30,15 @@ export default{
 }
 body::-webkit-scrollbar{
   display: none; 
+}
+.fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* acima do conteúdo */
+}
+router-view, footer {
+  margin-top: 70px; /* altura aproximada da navbar */
 }
 </style>

@@ -62,8 +62,7 @@ export default{
     align-items: center;
     font-weight: bold;
     color: white;
-    background-color: var(--CorPrincipal);
-    /* margin-bottom: 50px; */
+    background-color: var(--CorPrincipal); 
     padding: 10px;
 
 }
