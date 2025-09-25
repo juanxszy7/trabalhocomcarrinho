@@ -10,7 +10,7 @@
           <div class="info">
             <h3>{{ livro.titulo }}</h3>
             <p class="preco">{{ formatarPreco(livro.preco) }}</p>
-            <button class="comprar" @click="adicionarAoCarrinho(livro, $event)">Adicionar ao Carrinho</button>
+            <button class="comprar" @click="adicionarAoCarrinho(livro, $event)">Comprar</button>
           </div>
         </div>
       </div>
@@ -23,6 +23,11 @@
         <img :src="livroModal.img" :alt="livroModal.titulo" />
         <p class="descricao">{{ livroModal.descricao }}</p>
         <p class="preco">{{ formatarPreco(livroModal.preco) }}</p>
+        <!-- Avaliação com estrelas -->
+        <div class="avaliacao">
+        <span v-for="estrela in 5" :key="estrela"  class="estrela" :class="{ ativa: estrela <= avaliacaoSelecionada }" @click="avaliarLivro(estrela)">★
+        </span>
+        </div>
         <button class="comprar" @click="adicionarAoCarrinho(livroModal, $event)">Comprar</button>
         <button class="fechar" @click="fecharModal">Fechar</button>
       </div>
@@ -88,208 +93,238 @@ export default {
         },
       ],
       modalAberto: false,
+      avaliacaoSelecionada: 0,
+      avaliacoes: {}, // { 'A Culpa é das Estrelas': 5, ... }
       livroModal: {}
     };
   },
   methods: {
-    abrirModal(livro) {
-      this.livroModal = livro;
-      this.modalAberto = true;
-    },
-    fecharModal() {
-      this.modalAberto = false;
-    },
-    adicionarAoCarrinho(livro, event) {
-      emitter.emit("add-to-cart", livro, event);
-    },
-    formatarPreco(valor) {
-      return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-    }
+  avaliarLivro(estrela) {
+    this.avaliacaoSelecionada = estrela;
+    this.$set(this.avaliacoes, this.livroModal.titulo, estrela);
+  },
+  abrirModal(livro) {
+    this.livroModal = livro;
+    this.modalAberto = true;
+    this.avaliacaoSelecionada = this.avaliacoes[livro.titulo] || 0;
+  },
+  fecharModal() {
+    this.modalAberto = false;
+  },
+  adicionarAoCarrinho(livro, event) {
+    emitter.emit("add-to-cart", livro, event);
+  },
+  formatarPreco(valor) {
+    return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   }
+}
+
 };
 </script>
 
 <style scoped>
+.avaliacao-card {
+  margin-top: 5px;
+}
+.avaliacao {
+  margin: 10px 0;
+}
+.estrela {
+  font-size: 24px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.estrela.ativa {
+  color: #ffcc00;
+}
+/* ===== Estrutura principal ===== */
 .livros {
-  padding: 50px 20px;
-  background: #f5f6fa;
+  padding: 40px 20px;
+  background: #f9fafc; /* fundo mais clean */
+  font-family: "Inter", sans-serif;
 }
 
 .categoria {
   margin-bottom: 60px;
 }
 .categoria h2 {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   margin-bottom: 20px;
   color: var(--CorPrincipal);
-  border-left: 5px solid var(--CorPrincipal);
-  padding-left: 10px;
   font-weight: 700;
+  position: relative;
+  border-left: 5px solid var(--CorPrincipal);
+  border-radius: 5px;
+  padding-left: 10px;
 }
-
+/* ===== Cards ===== */
 .cards-container {
   display: flex;
   overflow-x: auto;
-  gap: 20px;
+  gap: 24px;
   padding: 20px 0;
   scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: var(--CorPrincipal) rgba(0,0,0,0.1);
 }
 .cards-container::-webkit-scrollbar {
-  height: 8px;
+  height: 6px;
 }
 .cards-container::-webkit-scrollbar-thumb {
-  background-color: var(--CorPrincipal);
+  background: linear-gradient(45deg, #ff9800, #f57c00);
   border-radius: 10px;
 }
-.cards-container::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.05);
-}
 
+/* Card */
 .card {
   flex: 0 0 220px;
-  border-radius: 20px;
+  border-radius: 18px;
+  background: #fff;
   overflow: hidden;
-  background: linear-gradient(145deg, #ffffff, #e6e9f0);
   cursor: pointer;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
   position: relative;
-  border: none;
 }
 .card:hover {
-  transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.15);
 }
-
 .card img {
   width: 100%;
-  height: 320px;
+  height: 280px;
   object-fit: cover;
-  transition: transform 0.4s ease, filter 0.4s ease;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  transition: transform 0.3s ease;
 }
 .card:hover img {
-  transform: scale(1.1);
-  filter: brightness(1.1);
+  transform: scale(1.08);
 }
-
+/* Info dentro do card */
 .info {
   position: absolute;
   bottom: 0;
-  left: 0;
   width: 100%;
-  background: linear-gradient(to top, rgba(26, 35, 126, 0.9), rgba(26, 35, 126, 0.7));
-  color: #fff;
+  background: linear-gradient(to top, rgba(26,35,126,0.95), rgba(26,35,126,0.6));
+  padding: 15px;
   text-align: center;
-  padding: 15px 10px;
   transform: translateY(100%);
   opacity: 0;
-  transition: all 0.4s ease;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  transition: all 0.3s ease;
 }
 .card:hover .info {
   transform: translateY(0);
   opacity: 1;
 }
-
 .info h3 {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
+  font-size: 1rem;
   font-weight: 600;
+  color: #fff;
+  margin-bottom: 6px;
 }
 .preco {
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #ffcc80;
   margin-bottom: 10px;
-  font-size: 1rem;
 }
-
 .comprar {
   background: linear-gradient(45deg, #ff9800, #f57c00);
   border: none;
   padding: 8px 20px;
   border-radius: 25px;
   color: #fff;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  transition: all 1s ease;
 }
 .comprar:hover {
-  background: linear-gradient(45deg, #f57c00, #ffb74d);
   transform: scale(1.08);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  background: linear-gradient(45deg, #f57c00, #ffb74d);
 }
-
-/* Modal */
+/* ===== Modal ===== */
 .modal-overlay {
   position: fixed;
   top:0;
   left:0;
   width:100%;
   height:100%;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.65);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  animation: fadeIn 0.4s ease forwards;
+  animation: fadeIn 0.3s ease;
 }
 @keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-content {
   background: #fff;
-  padding: 30px;
-  border-radius: 20px;
-  width: 450px;
+  padding: 24px;
+  border-radius: 18px;
+  width: 360px;
   max-width: 90%;
   text-align: center;
-  position: relative;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-  transform: translateY(-50px);
-  animation: modalPop 0.4s ease forwards;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  animation: modalPop 0.35s ease;
 }
 @keyframes modalPop {
-  from {opacity: 0; transform: translateY(-50px);}
-  to {opacity: 1; transform: translateY(0);}
+  from { opacity: 0; transform: translateY(-40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
+.modal-content h3 {
+  margin-bottom: 10px;
+  color: #1a237e;
+  font-size: 1.2rem;
+}
 .modal-content img {
-  width: 100%;
-  height: auto;
-  margin: 20px 0;
-  border-radius: 15px;
-  transition: transform 0.3s ease;
+  width: 85%;
+  max-height: 220px;
+  object-fit: contain;
+  margin: 15px auto;
+  border-radius: 10px;
 }
-.modal-content img:hover {
-  transform: scale(1.05);
-}
-
 .modal-content .descricao {
-  margin-bottom: 20px;
-  color: #333;
   font-size: 0.95rem;
-  line-height: 1.5;
+  margin-bottom: 10px;
+  color: #555;
 }
-
+.modal-content .preco {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #f57c00;
+  margin-bottom: 12px;
+}
+.avaliacao {
+  margin: 12px 0;
+}
+.estrela {
+  font-size: 24px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.estrela.ativa {
+  color: #ffcc00;
+}
 .modal-content .fechar {
-  margin-top: 15px;
-  padding: 8px 25px;
+  margin-top: 12px;
+  padding: 6px 18px;
   border-radius: 25px;
   border: none;
+  background: #e0e0e0;
   cursor: pointer;
-  background: #ccc;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 .modal-content .fechar:hover {
-  background: #999;
-  transform: scale(1.05);
+  background: #bdbdbd;
 }
-
+.avaliacao-info {
+  font-size: 0.85rem; /* menor */
+  color: #666;
+  margin-top: 4px;
+}
 </style>

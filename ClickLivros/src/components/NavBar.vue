@@ -18,6 +18,7 @@
     <nav class="links">
       <RouterLink to="/">Início</RouterLink>
       <RouterLink to="/about">Sobre</RouterLink>
+      <RouterLink to="/login">Login</RouterLink>
     </nav>
 
     <!-- Carrinho -->
