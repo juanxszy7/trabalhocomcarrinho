@@ -3,7 +3,7 @@
     <div class="card" role="main" aria-labelledby="login-title">
       <h1 id="login-title">ClickLivros — Entrar</h1>
 
-      <form @submit.prevent="onSubmit" novalidate>
+      <form @submit.prevent="onSubmit" novalidate method="POST">
         <!-- Email -->
         <label class="field">
           <span>Email</span>
@@ -15,6 +15,7 @@
             :class="{ invalid: errors.email }"
             @keydown.enter="onSubmit"
             placeholder="seu@email.com"
+            name="email"
           />
           <small v-if="errors.email" class="error">{{ errors.email }}</small>
         </label>
@@ -31,6 +32,7 @@
               minlength="6"
               @keydown.enter="onSubmit"
               placeholder="••••••••"
+              name="senha"
             />
             <button
               type="button"
@@ -45,12 +47,6 @@
           <small v-if="errors.password" class="error">{{ errors.password }}</small>
         </label>
 
-        <!-- Lembrar-me -->
-        <label class="row">
-          <input type="checkbox" v-model="form.remember" />
-          <span>Lembrar-me</span>
-        </label>
-
         <!-- Botão Entrar -->
         <button class="primary" :disabled="loading">
           <span v-if="!loading">Entrar</span>
@@ -58,16 +54,6 @@
         </button>
 
         <div class="divider">ou</div>
-
-        <!-- OAuth -->
-        <div class="oauth-row">
-          <button type="button" class="oauth google" @click="oauth('Google')">
-            Entrar com Google
-          </button>
-          <button type="button" class="oauth github" @click="oauth('GitHub')">
-            Entrar com GitHub
-          </button>
-        </div>
 
         <p class="small">
           Ainda não tem conta?
@@ -86,19 +72,19 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import axios from 'axios'
 
-// --- Emit events ---
 const emit = defineEmits(['login-success', 'go-register'])
 
-// --- Form state ---
 const form = reactive({ email: '', password: '', remember: false })
 const errors = reactive({ email: '', password: '' })
 const showPassword = ref(false)
 const loading = ref(false)
 const message = ref('')
 
-// Persist remember-me email locally
 const STORAGE_KEY = 'clicklivros_login'
+
+// Recupera email salvo
 try {
   const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null')
   if (saved?.email) {
@@ -107,7 +93,6 @@ try {
   }
 } catch (e) {}
 
-// --- Functions ---
 function validate() {
   errors.email = ''
   errors.password = ''
@@ -127,43 +112,34 @@ function togglePassword() {
   showPassword.value = !showPassword.value
 }
 
-// Simula login API
-async function fakeAuthApi(payload) {
-  await new Promise(r => setTimeout(r, 900))
-  if (payload.email === 'test@exemplo.com' && payload.password === 'senha123') {
-    return { ok: true, token: 'fake-jwt-token' }
-  }
-  return { ok: false, message: 'Credenciais incorretas.' }
-}
-
 async function onSubmit() {
   message.value = ''
   if (!validate()) return
 
   loading.value = true
   try {
-    const res = await fakeAuthApi({ email: form.email, password: form.password })
-    if (res.ok) {
-      message.value = 'Login realizado com sucesso!'
-      if (form.remember)
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ email: form.email }))
-      else localStorage.removeItem(STORAGE_KEY)
+    const res = await axios.post("http://localhost:3000/login", {
+      email: form.email,
+      senha: form.password
+    })
 
-      setTimeout(() => emit('login-success', { token: res.token }), 350)
+    message.value = res.data.message
+
+    // Salva email se "lembrar-me" estiver marcado
+    if (form.remember) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ email: form.email }))
     } else {
-      message.value = res.message || 'Erro no login.'
+      localStorage.removeItem(STORAGE_KEY)
     }
-  } catch {
-    message.value = 'Erro ao conectar. Tente novamente.'
+
+    // Emite evento com usuário logado
+    setTimeout(() => emit('login-success', res.data.user), 500)
+  } catch (err) {
+    message.value = err.response?.data?.message || "Erro ao logar."
   } finally {
     loading.value = false
     setTimeout(() => (message.value = ''), 3000)
   }
-}
-
-function oauth(provider) {
-  message.value = `Iniciando login com ${provider}...`
-  setTimeout(() => (message.value = ''), 2000)
 }
 </script>
 
@@ -177,8 +153,10 @@ function oauth(provider) {
 }
 
 .login-page {
-  min-height: 100vh;
-  display: grid;
+  min-height: 75vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 40px;
   align-items: center;
   justify-items: center;

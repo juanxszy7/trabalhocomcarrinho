@@ -13,6 +13,7 @@
             required
             :class="{ invalid: errors.email }"
             placeholder="seu@email.com"
+            name="email"
           />
           <small v-if="errors.email" class="error">{{ errors.email }}</small>
         </label>
@@ -26,6 +27,7 @@
               required
               minlength="6"
               placeholder="••••••••"
+              name="senha"
             />
             <button type="button" class="icon-btn" @click="togglePassword">
               <span v-if="showPassword">👁️</span>
@@ -53,7 +55,7 @@
 
         <p class="small">
           Já tem conta?
-          <a href="#" @click.prevent="$emit('go-login')">Entrar</a>
+          <RouterLink to="/login">Entrar</RouterLink>
         </p>
       </form>
 
@@ -62,10 +64,7 @@
       </transition>
     </div>
 
-    <div class="brand">
-      <h2>Bem-vindo à ClickLivros</h2>
-      <p>Crie sua conta e comece a explorar novos livros.</p>
-    </div>
+    
   </div>
 </template>
 
@@ -116,7 +115,7 @@ export default {
 
       this.loading = true
       try {
-        const res = await axios.post('http://localhost:5173/cadastro', {
+        const res = await axios.post('http://localhost:3000/cadastro', {
           email: this.form.email,
           senha: this.form.password
         })
@@ -146,9 +145,10 @@ export default {
 }
 
 .register-page {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 420px;
+  min-height: 75vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 40px;
   align-items: center;
   justify-items: center;
@@ -182,7 +182,7 @@ input:focus { box-shadow: 0 0 0 3px rgba(26,115,232,0.08); border-color: var(--p
 .invalid { border-color: var(--danger) }
 .error { color: var(--danger); font-size: 12px; margin-top: 6px; display: block }
 
-.primary { width:100%; padding:10px 12px; border-radius:8px; border:0; background:var(--primary); color:white; font-weight:600; cursor:pointer }
+.primary { width:100%; padding:10px 12px; border-radius:8px; border:0; background:var(--CorPrincipal); color:white; font-weight:600; cursor:pointer }
 .primary[disabled]{ opacity:0.7; cursor:wait }
 
 .small { font-size:13px; color:var(--muted); margin-top:12px }
