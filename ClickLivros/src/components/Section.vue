@@ -46,49 +46,49 @@ export default {
         {
           nome: "Romance",
           livros: [
-            { titulo: "A Culpa é das Estrelas", img: "/img/livros_de_romance/19_a_culpa_e_das_estrelas_c.jpg", preco: 39.9, descricao: "Dois jovens se apaixonam enquanto enfrentam doenças graves." },
-            { titulo: "Sonhando com Você", img: "/img/livros_de_romance/9786555655889.jpeg.170x255_q85_upscale.jpg", preco: 29.9, descricao: "Uma história de amor e superação." },
-            { titulo: "A Serpente e as Asas Feitas de Noite", img: "/img/livros_de_romance/a-serpente-e-as-asas-feitas-de-noite.jpg", preco: 34.9, descricao: "Romance envolvente cheio de mistério e paixão." },
-            { titulo: "Devolta para Casa", img: "/img/livros_de_romance/devolta.jpg", preco: 34.9, descricao: "Uma emocionante jornada de volta ao lar." },
-            { titulo: "Acredite", img: "/img/livros_de_romance/Romance.jpg", preco: 34.9, descricao: "Uma história de amor e coragem em um mundo dividido entre Braites e Lalulis." },
-            { titulo: "My Last Night", img: "/img/livros_de_romance/Romance2.jpg", preco: 34.9, descricao: "um romance muito romântico que te deixa quentinho por dentro, com amor à flor da pele, encontros inesquecíveis e aquele sentimento aconchegante que permanece muito depois da última página." },
-            { titulo: "Crush", img: "/img/livros_de_romance/Romance3.jpg", preco: 34.9, descricao: "um romance contemporâneo sobre Tati, que se muda para o Rio, reencontra seu crush da adolescência e descobre o amor enquanto trabalha em uma agência de publicidade." }
+            { titulo: "A Culpa é das Estrelas", img: "/img/livros_de_romance/19_a_culpa_e_das_estrelas_c.jpg", preco: 39.9, descricao: "Hazel e Augustus são dois adolescentes com câncer que embarcam numa jornada cheia de amor, dor e descobertas sobre a vida e a morte." },
+            { titulo: "Sonhando com Você", img: "/img/livros_de_romance/9786555655889.jpeg.170x255_q85_upscale.jpg", preco: 29.9, descricao: "Uma escritora ousada e um dono de cassino se apaixonam em meio aos perigos e seduções da Londres vitoriana." },
+            { titulo: "A Serpente e as Asas Feitas de Noite", img: "/img/livros_de_romance/a-serpente-e-as-asas-feitas-de-noite.jpg", preco: 34.9, descricao: "Uma humana criada pelo rei dos vampiros entra em um torneio mortal para conquistar poder — e acaba se apaixonando por seu inimigo." },
+            { titulo: "Devolta para Casa", img: "/img/livros_de_romance/devolta.jpg", preco: 34.9, descricao: "Após anos longe de casa, Cassie retorna à sua cidade natal e enfrenta segredos, reconciliações e a chance de recomeçar." },
+            { titulo: "Acredite", img: "/img/livros_de_romance/Romance.jpg", preco: 34.9, descricao: "Uma jovem mágica que desafia as regras ao amar alguém de outro povo. É uma fábula sobre amor, coragem e acreditar em si mesmo.  " },
+            { titulo: "My Last Night", img: "/img/livros_de_romance/Romance2.jpg", preco: 34.9, descricao: "Romance muito romântico que te deixa quentinho por dentro, com amor à flor da pele, encontros inesquecíveis e aquele sentimento aconchegante que permanece muito depois da última página." },
+            { titulo: "Crush", img: "/img/livros_de_romance/Romance3.jpg", preco: 34.9, descricao: "Conta a história de Tati, que tenta recomeçar a vida e reencontra um antigo amor enquanto testa um app de namoro." }
           ]
         },
         {
           nome: "Comédia",
           livros: [
-            { titulo: "Capitão Cueca", img: "/img/livros_de_comedia/humor-na-literatura-infantil-uma-ferramenta-sofisticada_3.jpg", preco: 24.9, descricao: "Aventuras hilárias de dois amigos e seu super-herói favorito." },
-            { titulo: "Diário de um Banana", img: "/img/livros_de_comedia/livro+diario+de+um+banana+casa+dos+horrores+jeff+kinney-0.jpg", preco: 19.9, descricao: "O cotidiano engraçado de Greg Heffley." },
-            { titulo: "Era Quatro Vezes", img: "/img/livros_de_comedia/livroComedia1.jpg", preco: 27.9, descricao: "Uma comédia inesperada em quatro atos." },
-            { titulo: "Piadas Ribeirinhas", img: "/img/livros_de_comedia/livroComedia2.jpg", preco: 27.9, descricao: "Piadas regionais que vão te fazer rir muito." },
-            { titulo: "A Divina Comédia", img: "/img/livros_de_comedia/Comedia.jpg", preco: 27.9, descricao: "A Divina Comédia narra a jornada de Dante pelo Inferno, Purgatório e Paraíso, explorando pecado, redenção e salvação." },
-            { titulo: "Melhor do Que Nos Filmes", img: "/img/livros_de_comedia/Comedia2.jpg", preco: 27.9, descricao: "Melhor do que nos filmes segue Liz, uma adolescente apaixonada por comédias românticas, que tenta viver sua própria história de amor quando seu crush de infância retorna à cidade." },
-            { titulo: "A Divina Comédia", img: "/img/livros_de_comedia/Comedia3.jpg", preco: 27.9, descricao: "A Divina Comédia, de Dante Alighieri, narra a jornada de Dante pelos reinos do Inferno, Purgatório e Paraíso, explorando pecado, redenção e a busca pela salvação." }
+            { titulo: "Capitão Cueca", img: "/img/livros_de_comedia/humor-na-literatura-infantil-uma-ferramenta-sofisticada_3.jpg", preco: 24.9, descricao: "Duas crianças travessas criam um super-herói engraçado e enfrentam muitas confusões e risadas." },
+            { titulo: "Diário de um Banana", img: "/img/livros_de_comedia/livro+diario+de+um+banana+casa+dos+horrores+jeff+kinney-0.jpg", preco: 19.9, descricao: "Greg Heffley enfrenta situações engraçadas e assustadoras enquanto tenta sobreviver a uma casa cheia de desafios e sustos." },
+            { titulo: "Era Quatro Vezes", img: "/img/livros_de_comedia/livroComedia1.jpg", preco: 27.9, descricao: "Uma comédia divertida que narra quatro histórias diferentes, cheias de humor e situações inesperadas." },
+            { titulo: "Piadas Ribeirinhas", img: "/img/livros_de_comedia/livroComedia2.jpg", preco: 27.9, descricao: "Uma coletânea de piadas típicas das regiões ribeirinhas, com muito humor regional e personagens caricatos que vão garantir boas risadas." },
+            { titulo: "A Divina Comédia", img: "/img/livros_de_comedia/Comedia.jpg", preco: 27.9, descricao: "É a jornada de Dante pelo Inferno, Purgatório e Paraíso em busca de redenção." },
+            { titulo: "Melhor do Que Nos Filmes", img: "/img/livros_de_comedia/Comedia2.jpg", preco: 27.9, descricao: "É sobre Liz, que tenta conquistar seu crush com a ajuda do vizinho... e acaba descobrindo o amor onde menos esperava." },
+            { titulo: "A Divina Comédia", img: "/img/livros_de_comedia/Comedia3.jpg", preco: 27.9, descricao: "Narra a viagem de Dante pelos três reinos do além — Inferno, Purgatório e Paraíso — guiado por Virgílio e Beatriz, em busca de redenção e iluminação espiritual.0" }
           ]
         },
         {
           nome: "Autoajuda",
           livros: [
-            { titulo: "Reinos Mágicos", img: "/img/livrosAA/livroAA1.jpg", preco: 49.9, descricao: "Descubra o poder da mente e da magia interior." },
-            { titulo: "Dragões e Heróis", img: "/img/livrosAA/livroAA2.jpg", preco: 44.9, descricao: "Como enfrentar desafios e conquistar objetivos." },
-            { titulo: "Feitiços e Magia", img: "/img/livrosAA/livroAA3.jpg", preco: 39.9, descricao: "Técnicas de motivação e autoconhecimento." },
-            { titulo: "Crescer e Evoluir", img: "/img/livrosAA/livroAA4.jpg", preco: 39.9, descricao: "Desenvolvimento pessoal para uma vida melhor." },
-            { titulo: "O Amor Não Está à Venda", img: "/img/livrosAA/AutoAjuda.jpg", preco: 39.9, descricao: "O Amor Não Está à Venda reflete sobre o Cântico dos Cânticos, explorando o amor humano e sua conexão com o divino." },
-            { titulo: "Chega de Desculpas", img: "/img/livrosAA/AutoAjuda2.jpg", preco: 39.9, descricao: "Chega de Desculpas, de Téo Calvo, traz reflexões sobre autoconhecimento e mudanças, incentivando uma vida mais autêntica e sem desculpas." },
-            { titulo: "Pare de Sabotar e Dê a Volta Por Cima", img: "/img/livrosAA/AutoAjuda3.png", preco: 39.9, descricao: "Pare de se sabotar e dê a volta por cima, de Flip Flippen, ensina a identificar e superar comportamentos que impedem o crescimento pessoal e profissional." }
+            { titulo: "Reinos Mágicos", img: "/img/livrosAA/livroAA1.jpg", preco: 49.9, descricao: "Uma jornada inspiradora por mundos encantados que despertam o poder interior, a imaginação e a autodescoberta." },
+            { titulo: "Dragões e Heróis", img: "/img/livrosAA/livroAA2.jpg", preco: 44.9, descricao: "Uma história envolvente sobre coragem, superação e a força necessária para enfrentar grandes desafios." },
+            { titulo: "Feitiços e Magia", img: "/img/livrosAA/livroAA3.jpg", preco: 39.9, descricao: "Descubra técnicas de autoconhecimento e transforme sua vida com sabedoria e poder interior." },
+            { titulo: "Crescer e Evoluir", img: "/img/livrosAA/livroAA4.jpg", preco: 39.9, descricao: "Um guia prático de desenvolvimento pessoal para alcançar equilíbrio, propósito e evolução constante." },
+            { titulo: "O Amor Não Está à Venda", img: "/img/livrosAA/AutoAjuda.jpg", preco: 39.9, descricao: "É uma reflexão sobre o amor verdadeiro, explorando desejo, liberdade e espiritualidade." },
+            { titulo: "Chega de Desculpas", img: "/img/livrosAA/AutoAjuda2.jpg", preco: 39.9, descricao: "Incentiva mulheres a superarem medos e buscarem seus sonhos com coragem." },
+            { titulo: "Pare de Sabotar e Dê a Volta Por Cima", img: "/img/livrosAA/AutoAjuda3.png", preco: 39.9, descricao: "Ajuda a identificar e superar padrões de autossabotagem, oferecendo estratégias práticas para alcançar o sucesso pessoal e profissional." }
           ]
         },
         {
           nome: "Terror",
           livros: [
-            { titulo: "Noite Sombria", img: "/img/livrosTerror/livroTerror1.png", preco: 49.9, descricao: "Histórias aterrorizantes para corajosos." },
-            { titulo: "Casa Assombrada", img: "/img/livrosTerror/livroTerror2.jpg", preco: 44.9, descricao: "Mistério e suspense em cada página." },
-            { titulo: "Feitiços Malditos", img: "/img/livrosTerror/livroTerror3.jpg", preco: 39.9, descricao: "Sombras e terror aguardam os leitores." },
-            { titulo: "A Última Vez", img: "/img/livrosTerror/livroTerror4.jpg", preco: 39.9, descricao: "Um suspense que arrepia até os mais corajosos." },
-            { titulo: "O da Terra do Nunca", img: "/img/livrosTerror/Terror.jpg", preco: 39.9, descricao: "O Rei da Terra do Nunca, de Nikki St. Crowe, é uma releitura sombria e adulta de Peter Pan, com romance dark e personagens complexos." },
-            { titulo: "A Noite dos Mortos Vivos", img: "/img/livrosTerror/Terror2.png", preco: 39.9, descricao: "A Noite dos Mortos-Vivos, de John Russo, é um clássico do terror sobre pessoas tentando sobreviver a uma noite cercadas por mortos-vivos em uma fazenda isolada." },
-            { titulo: "O Fantasma dos Canterville", img: "/img/livrosTerror/Terror3.jpg", preco: 39.9, descricao: "O Fantasma dos Canterville e Outros Contos, de Oscar Wilde, traz histórias curtas que combinam humor, crítica social e sobrenatural." }
+            { titulo: "Noite Sombria", img: "/img/livrosTerror/livroTerror1.png", preco: 49.9, descricao: "Histórias sombrias e intensas que testam os limites da coragem em noites repletas de mistério e terror." },
+            { titulo: "Casa Assombrada", img: "/img/livrosTerror/livroTerror2.jpg", preco: 44.9, descricao: "Mistérios e fenômenos sobrenaturais envolvem uma casa onde nada é o que parece." },
+            { titulo: "Feitiços Malditos", img: "/img/livrosTerror/livroTerror3.jpg", preco: 39.9, descricao: "Antigos feitiços despertam forças sombrias que colocam todos em perigo." },
+            { titulo: "A Última Vez", img: "/img/livrosTerror/livroTerror4.jpg", preco: 39.9, descricao: "Um suspense envolvente onde cada escolha pode ser a última." },
+            { titulo: "O da Terra do Nunca", img: "/img/livrosTerror/Terror.jpg", preco: 39.9, descricao: "É uma releitura sombria e sensual de Peter Pan, onde Winnie Darling é levada para a Terra do Nunca aos 18 anos e se vê envolvida com Peter e os Garotos Perdidos em um jogo de poder e desejo." },
+            { titulo: "A Noite dos Mortos Vivos", img: "/img/livrosTerror/Terror2.png", preco: 39.9, descricao: " Acompanha um grupo tentando sobreviver a um apocalipse zumbi dentro de uma casa isolada." },
+            { titulo: "O Fantasma dos Canterville", img: "/img/livrosTerror/Terror3.jpg", preco: 39.9, descricao: "É uma história divertida sobre um fantasma que não consegue assustar uma família moderna." }
           ]
         },
       ],

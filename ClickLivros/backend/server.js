@@ -16,60 +16,78 @@ mongoose.connect("mongodb://localhost:27017/ClickLivrosUsuarios", {
 .then(() => console.log("✅ Conectado ao MongoDB"))
 .catch(err => console.error("❌ Erro ao conectar no MongoDB:", err))
 
-// --- Modelo de Usuário ---
-const UserSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  senha: { type: String, required: true }
-})
-const User = mongoose.model("User", UserSchema)
-
-// --- Rota de Cadastro ---
-app.post("/cadastro", async (req, res) => {
+// Listar todos os usuários
+app.get('/dashboard', async (req, res) => {
   try {
-    const { email, senha } = req.body
-
-    // Verifica se já existe usuário
-    const usuarioExistente = await User.findOne({ email })
-    if (usuarioExistente) {
-      return res.status(400).json({ message: "Este email já está cadastrado." })
-    }
-
-    // Criptografa senha
-    const hash = await bcrypt.hash(senha, 10)
-
-    const novoUsuario = new User({ email, senha: hash })
-    await novoUsuario.save()
-
-    res.json({ message: "Usuário cadastrado com sucesso!" })
+    const usuarios = await User.find().select('-senha'); // sem senha
+    return res.status(200).json(usuarios);
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: "Erro ao cadastrar usuário." })
+    console.error('Erro ao listar usuários:', err);
+    return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
   }
-})
+});
 
-// --- Rota de Login ---
-app.post("/login", async (req, res) => {
+// Buscar usuário por ID
+app.get('/dashboard/:id', async (req, res) => {
   try {
-    const { email, senha } = req.body
-
-    // Procura usuário pelo email
-    const usuario = await User.findOne({ email })
+    const usuario = await User.findById(req.params.id).select('-senha');
     if (!usuario) {
-      return res.status(400).json({ message: "Usuário não encontrado." })
+      return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
     }
-
-    // Compara senha
-    const senhaValida = await bcrypt.compare(senha, usuario.senha)
-    if (!senhaValida) {
-      return res.status(400).json({ message: "Senha incorreta." })
-    }
-
-    res.json({ message: "Login realizado com sucesso!" })
+    return res.status(200).json(usuario);
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: "Erro ao realizar login." })
+    console.error('Erro ao buscar usuário:', err);
+    return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
   }
-})
+});
+
+// Criar novo usuário
+app.post('/dashboard', async (req, res) => {
+  try {
+    const { nome, email, senha, tipoUsuario } = req.body;
+    const novoUsuario = new User({ nome, email, senha, tipoUsuario });
+    await novoUsuario.save();
+    return res.status(201).json({ mensagem: 'Usuário criado com sucesso!', usuario: novoUsuario });
+  } catch (err) {
+    console.error('Erro ao criar usuário:', err);
+    return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+app.put('/dashboard/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nome, email, idade } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ mensagem: 'ID inválido' });
+  }
+
+  try {
+    const usuarioAtualizado = await Usuario.findByIdAndUpdate(
+      id,
+      { nome, email, idade },
+      { new: true }
+    );
+    if (!usuarioAtualizado) return res.status(404).json({ mensagem: 'Usuário não encontrado' });
+    res.json(usuarioAtualizado);
+  } catch (err) {
+    res.status(500).json({ mensagem: 'Erro ao atualizar usuário', erro: err.message });
+  }
+});
+
+// Deletar usuário por ID
+app.delete('/dashboard/:id', async (req, res) => {
+  try {
+    const usuarioDeletado = await User.findByIdAndDelete(req.params.id);
+    if (!usuarioDeletado) {
+      return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+    }
+    return res.status(200).json({ mensagem: 'Usuário deletado com sucesso!' });
+  } catch (err) {
+    console.error('Erro ao deletar usuário:', err);
+    return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
 
 // --- Inicia servidor ---
 app.listen(3000, () => {
