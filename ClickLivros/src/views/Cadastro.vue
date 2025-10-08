@@ -5,6 +5,20 @@
 
       <form @submit.prevent="onSubmit" novalidate>
         <label class="field">
+          <span>Nome</span>
+          <input
+            v-model.trim="form.nome"
+            type="text"
+            autocomplete="username"
+            required
+            :class="{ invalid: errors.nome }"
+            placeholder="Nome e Sobrenome"
+            name="email"
+          />
+          <small v-if="errors.nome" class="error">{{ errors.nome }}</small>
+        </label>
+
+        <label class="field">
           <span>Email</span>
           <input
             v-model.trim="form.email"
@@ -77,11 +91,12 @@ export default {
   data() {
     return {
       form: reactive({
+        nome: '',
         email: '',
         password: '',
         confirmPassword: ''
       }),
-      errors: reactive({ email: '', password: '', confirmPassword: '' }),
+      errors: reactive({ nome: '', email: '', password: '', confirmPassword: '' }),
       showPassword: false,
       loading: false,
       message: ''
@@ -92,10 +107,12 @@ export default {
       this.showPassword = !this.showPassword
     },
     validate() {
+      this.errors.nome = ''
       this.errors.email = ''
       this.errors.password = ''
       this.errors.confirmPassword = ''
 
+      if (!this.form.nome) this.errors.nome = 'O nome é obrigatório.'
       if (!this.form.email) this.errors.email = 'Email é obrigatório.'
       else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.form.email))
         this.errors.email = 'Email inválido.'
@@ -116,6 +133,7 @@ export default {
       this.loading = true
       try {
         const res = await axios.post('http://localhost:3000/cadastro', {
+          nome: this.form.nome,
           email: this.form.email,
           senha: this.form.password
         })

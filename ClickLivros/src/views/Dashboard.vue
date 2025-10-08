@@ -17,6 +17,7 @@
         <thead>
           <tr>
             <th>ID</th>
+            <th>Nome</th>
             <th>Email</th>
             <th>Ações</th>
           </tr>
@@ -24,9 +25,10 @@
         <tbody>
           <tr v-for="user in usuarios" :key="user._id">
             <td>{{ user._id }}</td>
+            <td>{{ user.nome }}</td>
             <td>{{ user.email }}</td>
             <td class="acoes">
-              <RouterLink to="/editar/:id">✏️ Editar</RouterLink>
+              <RouterLink class="editar" to="/editar/:id">✏️ Editar</RouterLink>
               <button class="excluir" @click="excluirUsuario(user._id)">🗑️ Excluir</button>
             </td>
           </tr>
@@ -34,10 +36,72 @@
       </table>
     </div>
   </div>
+
+
+  <!-- Fundo escurecido -->
+    <div
+      v-if="abrirModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    >
+      <!-- Modal -->
+      <div class="bg-white p-6 rounded-2xl shadow-xl w-96 relative">
+        <!-- Botão de fechar -->
+        <button
+          @click="abrirModal = false"
+          class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
+
+        <h2 class="text-xl font-semibold mb-4 text-center">Formulário</h2>
+
+        <form @submit.prevent="enviarFormulario" class="flex flex-col gap-3">
+          <label class="flex flex-col">
+            <span class="text-sm text-gray-700 mb-1">Nome:</span>
+            <input
+              v-model="form.nome"
+              type="text"
+              required
+              class="border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+            />
+          </label>
+
+          <label class="flex flex-col">
+            <span class="text-sm text-gray-700 mb-1">Email:</span>
+            <input
+              v-model="form.email"
+              type="email"
+              required
+              class="border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+            />
+          </label>
+
+          <button
+            type="submit"
+            class="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors"
+          >
+            Enviar
+          </button>
+        </form>
+      </div>
+    </div>
+
+
 </template>
 
 <script>
 import axios from "axios"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
+
+import { ref } from 'vue'
+
+const abrirModal = ref(false)
+const form = ref({
+  nome: '',
+  email: ''
+})
 
 export default {
   name: "Dashboard",
@@ -45,7 +109,8 @@ export default {
     return {
       usuarios: [],
       loading: true,
-      erro: null
+      erro: null,
+      modalaberto: false
     }
   },
   async mounted() {
@@ -62,23 +127,35 @@ export default {
       console.log("⏳ Carregamento finalizado")
     }
   },
-  methods: {
-  editarUsuario(user) {
-    alert(`Editar usuário: ${user.email}`) // <-- corrigido
-    // Aqui você pode abrir um modal ou redirecionar para edição
-  },
+  methods: {   
 
-  async excluirUsuario(id) {
-    if (!confirm("Tem certeza que deseja excluir este usuário?")) return
-    try {
-      await axios.delete(`http://localhost:3000/dashboard/${id}`) // <-- corrigido
-      this.usuarios = this.usuarios.filter(u => u._id !== id)
-      alert("Usuário excluído com sucesso ✅")
-    } catch (err) {
-      console.error("❌ Erro ao excluir usuário:", err)
-      alert("Erro ao excluir usuário ❌")
+    async editarUsuario(id) {
+      try {
+          // Envia os dados atualizados para o backend
+          const resposta = await axios.put(`http://localhost:3000/dashboard/${id}`, form.value)
+
+          console.log('Usuário atualizado:', resposta.data)
+          alert('✅ Usuário atualizado com sucesso!')
+
+          // Redireciona para a página de listagem (ou onde quiser)
+          router.push('/dashboard')
+        } catch (erro) {
+          console.error('Erro ao atualizar usuário:', erro)
+          alert('❌ Erro ao atualizar o usuário. Verifique os dados e tente novamente.')
+        }
+    },
+
+    async excluirUsuario(id) {
+      if (!confirm("Tem certeza que deseja excluir este usuário?")) return
+      try {
+        await axios.delete(`http://localhost:3000/dashboard/${id}`) // <-- corrigido
+        this.usuarios = this.usuarios.filter(u => u._id !== id)
+        alert("Usuário excluído com sucesso ✅")
+      } catch (err) {
+        console.error("❌ Erro ao excluir usuário:", err)
+        alert("Erro ao excluir usuário ❌")
+      }
     }
-  }
 }
 
 }
@@ -146,7 +223,7 @@ th, td {
 }
 
 th {
-  background: linear-gradient(135deg, #1a237e, #3949ab);
+  background: var(--CorPrincipal);
   color: #fff;
   font-weight: 600;
   font-size: 15px;
