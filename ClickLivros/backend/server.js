@@ -65,34 +65,48 @@ app.get('/dashboard', async (req, res) => {
   }
 })
 
-// Buscar usuário específico pelo ID
-// app.get('/dashboard/:id', async (req, res) => {
-//   try {
-//     const usuario = await Usuario.findById(req.params.id);
-    
-//     if (!usuario) {
-//       return res.status(404).json({ message: 'Usuário não encontrado' });
-//     }else{
-//       res.json(usuario); 
-//     }
+// Buscar um usuário pelo ID
+app.get('/dashboard/:id', async (req, res) => {
+  const { id } = req.params;
 
-//   } catch (err) {
-//     console.error("❌ Erro ao buscar usuário:", err);
-//     res.status(500).json({ message: 'Erro no servidor ao buscar usuário' });
-//   }
-// });
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ mensagem: 'ID inválido' });
+  }
+
+  try {
+    const usuario = await Usuario.findById(id).select('-senha');
+    if (!usuario) return res.status(404).json({ mensagem: 'Usuário não encontrado' });
+    res.json(usuario);
+  } catch (err) {
+    res.status(500).json({ mensagem: 'Erro ao buscar usuário', erro: err.message });
+  }
+});
 
 
 // Editar perfil
 app.put('/dashboard/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nome, email } = req.body;
-        await Usuario.findByIdAndUpdate(id, { nome, email });
-        res.json({ mensagem: 'Usuário atualizado com sucesso!' });
-    }catch (erro) { 
-        res.status(500).json({ mensagem: 'Erro ao atualizar usuário', erro });
+  const { id } = req.params;
+  const { nome, email, idade, senha } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ mensagem: 'ID inválido' });
+  }
+
+  try {
+    const dadosAtualizados = { nome, email, idade };
+    if (senha) {
+      const salt = await bcrypt.genSalt(10);
+      dadosAtualizados.senha = await bcrypt.hash(senha, salt);
     }
+
+    const usuarioAtualizado = await Usuario.findByIdAndUpdate(id, dadosAtualizados, { new: true });
+    if (!usuarioAtualizado) return res.status(404).json({ mensagem: 'Usuário não encontrado' });
+    const usuarioSemSenha = usuarioAtualizado.toObject();
+    delete usuarioSemSenha.senha;
+    res.json(usuarioSemSenha);
+  } catch (err) {
+    res.status(500).json({ mensagem: 'Erro ao atualizar usuário', erro: err.message });
+  }
 });
 
 // ✅ 4. Excluir usuário

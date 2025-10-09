@@ -1,125 +1,186 @@
 <template>
-  <div class="editar-usuario">
-    <h1>✏️ Editar Usuário</h1>
+  <div class="editar-page">
+    <div class="overlay"></div>
 
-    <!-- Estado de carregamento -->
-    <p v-if="loading" class="status">Carregando dados...</p>
+    <div class="editar-card">
+      <h1>Editar Usuário</h1>
+      <form @submit.prevent="atualizarUsuario">
+        <div class="form-group">
+          <label>Nome</label>
+          <input v-model="form.nome" type="text" placeholder="Digite o nome" required />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input v-model="form.email" type="email" placeholder="Digite o email" required />
+        </div>
 
-    <!-- Erro -->
-    <p v-else-if="erro" class="erro">{{ erro }}</p>
-
-    <!-- Formulário -->
-    <form v-else @submit.prevent="atualizarUsuario" class="form-editar">
-      <label>
-        Nome:
-        <input v-model="form.nome" type="text" required />
-      </label>
-
-      <label>
-        Email:
-        <input v-model="form.email" type="email" required />
-      </label>
-
-      <button type="submit" :disabled="salvando">
-        {{ salvando ? 'Salvando...' : 'Salvar Alterações' }}
-      </button>
-    </form>
-
-    <!-- Confirmação -->
-    <p v-if="sucesso" class="sucesso">✅ Usuário atualizado com sucesso!</p>
+        <div class="acoes-formulario">
+          <button type="submit" class="salvar">Salvar</button>
+          <button type="button" class="cancelar" @click="cancelar">Cancelar</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
-  name: 'EditarUsuario',
+  name: "EditarUsuario",
   data() {
     return {
-      form: {
-        nome: '',
-        email: ''
-      },
-      loading: true,
-      erro: '',
-      sucesso: false,
-      salvando: false
-    }
+      form: { _id: "", nome: "", email: "" },
+    };
   },
-  async created(id) {
+  mounted() {
     const id = this.$route.params.id;
-    try {
-      const res = await axios.get(`http://localhost:3000/dashboard/${id}`)
-      this.form = {...res.data}
-    } catch (e) {
-      this.erro = 'Erro ao carregar usuário.'
-    } finally {
-      this.loading = false
+    if (!id) {
+      alert("ID do usuário não fornecido!");
+      this.$router.push("/Dashboard");
+      return;
     }
+    this.carregarUsuario(id);
   },
   methods: {
-    async atualizarUsuario() {
-      const id = this.$route.params.id
+    async carregarUsuario(id) {
       try {
-        this.salvando = true
-        await axios.put(`http://localhost:3000/dashboard/${id}`, this.form)
-        this.sucesso = true
-        setTimeout(() => this.$router.push('/dashboard'), 2000)
+        const res = await axios.get(`http://localhost:3000/dashboard/${id}`);
+        this.form = { ...res.data };
       } catch (e) {
-        this.erro = 'Erro ao atualizar usuário.'
-      } finally {
-        this.salvando = false
+        console.error(e);
+        alert("Usuário não encontrado!");
+        this.$router.push("/Dashboard");
       }
-    }
-  }
-}
+    },
+    async atualizarUsuario() {
+      try {
+        await axios.put(`http://localhost:3000/dashboard/${this.form._id}`, this.form);
+        alert("Usuário atualizado com sucesso!");
+        this.$router.push("/dashboard");
+      } catch (e) {
+        console.error(e);
+        alert("Erro ao atualizar usuário!");
+      }
+    },
+    cancelar() {
+      this.$router.push("/dashboard");
+    },
+  },
+};
 </script>
 
 <style scoped>
-.editar-usuario {
-  max-width: 400px;
-  margin: 40px auto;
+/* ================= PÁGINA ================= */
+.editar-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #001f3f, #0056b3); /* gradiente azul moderno */
   padding: 20px;
-  background: #f6f6f6;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
 }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.25);
+}
+
+/* ================= CARD ================= */
+.editar-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.97);
+  padding: 40px 35px;
+  border-radius: 25px;
+  width: 400px;
+  max-width: 95%;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.editar-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+}
+
+/* ================= TÍTULO ================= */
 h1 {
-  text-align: center;
+  margin-bottom: 30px;
+  color: #002f55;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+
+/* ================= FORM ================= */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
 }
+
 label {
-  display: flex;
-  flex-direction: column;
-  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+  color: #003366;
+  font-weight: 500;
+  font-size: 0.95rem;
 }
+
 input {
-  padding: 8px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  font-size: 1rem;
+  transition: 0.3s;
 }
-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
+input:focus {
+  border-color: #0077ff;
+  box-shadow: 0 0 10px rgba(0,119,255,0.3);
+}
+
+/* ================= BOTÕES ================= */
+.acoes-formulario {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.salvar, .cancelar {
+  flex: 1;
+  padding: 14px 0;
+  border-radius: 14px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.3s;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
 }
-button:hover {
-  background-color: #0056b3;
+
+.salvar {
+  background: linear-gradient(135deg, #0077ff, #00c6ff);
+  margin-right: 10px;
+  box-shadow: 0 6px 15px rgba(0,118,255,0.4);
 }
-.erro {
-  color: red;
-  text-align: center;
+.salvar:hover {
+  background: linear-gradient(135deg, #005ecb, #009ecb);
+  transform: translateY(-2px);
 }
-.sucesso {
-  color: green;
-  text-align: center;
+
+.cancelar {
+  background: linear-gradient(135deg, #e74c3c, #ff4d4d);
+  margin-left: 10px;
+  box-shadow: 0 6px 15px rgba(231,76,60,0.4);
+}
+.cancelar:hover {
+  transform: translateY(-2px);
 }
 </style>
