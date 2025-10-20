@@ -28,7 +28,7 @@
             <td>{{ user.nome }}</td>
             <td>{{ user.email }}</td>
             <td class="acoes">
-              <RouterLink class="editar" to="/editar/:id">✏️ Editar</RouterLink>
+              <button class="editar" @click="editarUsuario(user)">✏️ Editar</button>
               <button class="excluir" @click="excluirUsuario(user._id)">🗑️ Excluir</button>
             </td>
           </tr>
@@ -109,8 +109,7 @@ export default {
     return {
       usuarios: [],
       loading: true,
-      erro: null,
-      modalaberto: false
+      erro: null
     }
   },
   async mounted() {
@@ -129,20 +128,8 @@ export default {
   },
   methods: {   
 
-    async editarUsuario(id) {
-      try {
-          // Envia os dados atualizados para o backend
-          const resposta = await axios.put(`http://localhost:3000/dashboard/${id}`, form.value)
-
-          console.log('Usuário atualizado:', resposta.data)
-          alert('✅ Usuário atualizado com sucesso!')
-
-          // Redireciona para a página de listagem (ou onde quiser)
-          router.push('/dashboard')
-        } catch (erro) {
-          console.error('Erro ao atualizar usuário:', erro)
-          alert('❌ Erro ao atualizar o usuário. Verifique os dados e tente novamente.')
-        }
+    editarUsuario(usuario) {
+      this.$router.push(`/editar-usuario/${usuario._id}`);
     },
 
     async excluirUsuario(id) {

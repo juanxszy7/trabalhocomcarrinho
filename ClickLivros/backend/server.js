@@ -54,6 +54,25 @@ app.post('/cadastro', async (req, res) => {
   }
 })
 
+app.post('/login', async (req, res) => {
+  const { email, senha } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: 'Usuário não encontrado' });
+
+    const isMatch = await bcrypt.compare(senha, user.senha);
+    if (!isMatch) return res.status(400).json({ message: 'Senha incorreta' });
+
+    // Gera token JWT
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ token, user: { id: user._id, nome: user.nome, email: user.email } });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ✅ 1. Listar todos os usuários (usado pelo Dashboard.vue)
 app.get('/dashboard', async (req, res) => {
   try {
@@ -65,9 +84,10 @@ app.get('/dashboard', async (req, res) => {
   }
 })
 
-// Buscar um usuário pelo ID
+//Busca os usuarios pelo id
 app.get('/dashboard/:id', async (req, res) => {
   const { id } = req.params;
+  console.log("🧩 ID recebido:", id);
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ mensagem: 'ID inválido' });
@@ -83,31 +103,29 @@ app.get('/dashboard/:id', async (req, res) => {
 });
 
 
-// Editar perfil
+// Editar USUARIO
 app.put('/dashboard/:id', async (req, res) => {
-  const { id } = req.params;
-  const { nome, email, idade, senha } = req.body;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ mensagem: 'ID inválido' });
-  }
-
   try {
-    const dadosAtualizados = { nome, email, idade };
-    if (senha) {
-      const salt = await bcrypt.genSalt(10);
-      dadosAtualizados.senha = await bcrypt.hash(senha, salt);
+    const { id } = req.params;
+    const { nome, email, senha } = req.body;
+
+    const atualizacoes = {};
+    if (nome) atualizacoes.nome = nome;
+    if (email) atualizacoes.email = email;
+    if (senha) atualizacoes.senha = senha;
+
+    const usuarioAtualizado = await Usuario.findByIdAndUpdate(id, atualizacoes, { new: true });
+
+    if (!usuarioAtualizado) {
+      return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
-    const usuarioAtualizado = await Usuario.findByIdAndUpdate(id, dadosAtualizados, { new: true });
-    if (!usuarioAtualizado) return res.status(404).json({ mensagem: 'Usuário não encontrado' });
-    const usuarioSemSenha = usuarioAtualizado.toObject();
-    delete usuarioSemSenha.senha;
-    res.json(usuarioSemSenha);
-  } catch (err) {
-    res.status(500).json({ mensagem: 'Erro ao atualizar usuário', erro: err.message });
+    res.json({ message: "Usuário atualizado com sucesso!", usuarioAtualizado });
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao atualizar o usuário." });
   }
 });
+
 
 // ✅ 4. Excluir usuário
 app.delete('/dashboard/:id', async (req, res) => {

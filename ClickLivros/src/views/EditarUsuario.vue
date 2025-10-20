@@ -1,25 +1,27 @@
 <template>
-  <div class="editar-page">
-    <div class="overlay"></div>
+  <div class="editar-usuario">
+    <h2>Editar Usuário</h2>
 
-    <div class="editar-card">
-      <h1>Editar Usuário</h1>
-      <form @submit.prevent="atualizarUsuario">
-        <div class="form-group">
-          <label>Nome</label>
-          <input v-model="form.nome" type="text" placeholder="Digite o nome" required />
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input v-model="form.email" type="email" placeholder="Digite o email" required />
-        </div>
+    <form @submit.prevent="atualizarUsuario">
+      <div>
+        <label>Nome:</label>
+        <input type="text" v-model="nome" />
+      </div>
 
-        <div class="acoes-formulario">
-          <button type="submit" class="salvar">Salvar</button>
-          <button type="button" class="cancelar" @click="cancelar">Cancelar</button>
-        </div>
-      </form>
-    </div>
+      <div>
+        <label>Email:</label>
+        <input type="email" v-model="email" />
+      </div>
+
+      <div>
+        <label>Senha (opcional):</label>
+        <input type="password" v-model="senha" />
+      </div>
+
+      <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <p v-if="mensagem">{{ mensagem }}</p>
   </div>
 </template>
 
@@ -27,160 +29,127 @@
 import axios from "axios";
 
 export default {
-  name: "EditarUsuario",
+  props: ["id"],
   data() {
     return {
-      form: { _id: "", nome: "", email: "" },
+      nome: "",
+      email: "",
+      senha: "",
+      mensagem: ""
     };
   },
-  mounted() {
-    const id = this.$route.params.id;
-    if (!id) {
-      alert("ID do usuário não fornecido!");
-      this.$router.push("/Dashboard");
-      return;
-    }
-    this.carregarUsuario(id);
+  async mounted() {
+    await this.buscarUsuario();
   },
   methods: {
-    async carregarUsuario(id) {
+    async buscarUsuario() {
       try {
-        const res = await axios.get(`http://localhost:3000/dashboard/${id}`);
-        this.form = { ...res.data };
-      } catch (e) {
-        console.error(e);
-        alert("Usuário não encontrado!");
-        this.$router.push("/Dashboard");
+        const res = await axios.get(`http://localhost:3000/dashboard/${this.id}`);
+        this.nome = res.data.nome;
+        this.email = res.data.email;
+      } catch (error) {
+        this.mensagem = "Erro ao carregar os dados do usuário.";
       }
     },
     async atualizarUsuario() {
       try {
-        await axios.put(`http://localhost:3000/dashboard/${this.form._id}`, this.form);
-        alert("Usuário atualizado com sucesso!");
-        this.$router.push("/dashboard");
-      } catch (e) {
-        console.error(e);
-        alert("Erro ao atualizar usuário!");
+        const body = {
+          id: this.id,
+          nome: this.nome,
+          email: this.email,
+          senha: this.senha
+        };
+        const res = await axios.put(`http://localhost:3000/dashboard/${this.id}`, body);
+        this.mensagem = res.data.message || "Usuário atualizado com sucesso!";
+      } catch (error) {
+        this.mensagem = "Erro ao atualizar o usuário.";
       }
-    },
-    cancelar() {
-      this.$router.push("/dashboard");
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
-/* ================= PÁGINA ================= */
-.editar-page {
+.editar-usuario {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  background: #1a237e; /* cor principal */
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(26, 35, 126, 0.3); /* card flutuante */
+  color: #ffffff; /* texto branco */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   position: relative;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #001f3f, #0056b3); /* gradiente azul moderno */
-  padding: 20px;
-  font-family: "Poppins", sans-serif;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.25);
-}
-
-/* ================= CARD ================= */
-.editar-card {
-  position: relative;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.97);
-  padding: 40px 35px;
-  border-radius: 25px;
-  width: 400px;
-  max-width: 95%;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.editar-card:hover {
+.editar-usuario:hover {
   transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  box-shadow: 0 25px 40px rgba(26, 35, 126, 0.4);
 }
 
-/* ================= TÍTULO ================= */
-h1 {
-  margin-bottom: 30px;
-  color: #002f55;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-/* ================= FORM ================= */
-.form-group {
-  margin-bottom: 20px;
-  text-align: left;
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 28px;
+  color: #eceff1; /* cor secundária */
+  font-weight: 700;
 }
 
 label {
   display: block;
-  margin-bottom: 8px;
-  color: #003366;
-  font-weight: 500;
-  font-size: 0.95rem;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #eceff1; /* cor secundária */
 }
 
 input {
   width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  transition: 0.3s;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #eceff1; /* borda cinza clara */
+  border-radius: 10px;
+  font-size: 15px;
+  background: #1a237e; /* fundo do input combina com card */
+  color: #ffffff;
+  transition: border-color 0.3s, background 0.3s;
 }
+
+input::placeholder {
+  color: #c5cae9; /* placeholder suave */
+}
+
 input:focus {
-  border-color: #0077ff;
-  box-shadow: 0 0 10px rgba(0,119,255,0.3);
+  outline: none;
+  border-color: #c5cae9;
+  background: #283593; /* leve destaque ao focar */
+  box-shadow: 0 0 8px rgba(197, 202, 233, 0.5);
 }
 
-/* ================= BOTÕES ================= */
-.acoes-formulario {
-  display: flex;
-  justify-content: space-between;
+button {
   margin-top: 25px;
-}
-
-.salvar, .cancelar {
-  flex: 1;
-  padding: 14px 0;
-  border-radius: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
+  padding: 12px;
+  width: 100%;
+  background: #283593; /* tom secundário de azul */
+  color: #ffffff;
   border: none;
-  color: #fff;
-  font-size: 1rem;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
 }
 
-.salvar {
-  background: linear-gradient(135deg, #0077ff, #00c6ff);
-  margin-right: 10px;
-  box-shadow: 0 6px 15px rgba(0,118,255,0.4);
-}
-.salvar:hover {
-  background: linear-gradient(135deg, #005ecb, #009ecb);
+button:hover {
+  background: #3949ab;
   transform: translateY(-2px);
 }
 
-.cancelar {
-  background: linear-gradient(135deg, #e74c3c, #ff4d4d);
-  margin-left: 10px;
-  box-shadow: 0 6px 15px rgba(231,76,60,0.4);
-}
-.cancelar:hover {
-  transform: translateY(-2px);
+p {
+  margin-top: 20px;
+  text-align: center;
+  color: #c5cae9; /* mensagem suave */
+  font-weight: 500;
 }
 </style>
+

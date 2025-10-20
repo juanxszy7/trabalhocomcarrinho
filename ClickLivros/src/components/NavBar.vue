@@ -7,22 +7,14 @@
       </RouterLink>
     </div>
 
-    <div class="search-container">
-      <input
-        type="text"
-        placeholder="🔍  Título, Autor, Gênero..."
-        id="campoPesquisa"
-      />
-    </div>
-
     <nav class="links">
       <RouterLink to="/">Início</RouterLink>
       <RouterLink to="/about">Sobre</RouterLink>
       <RouterLink to="/login">Login</RouterLink>
+      <!-- Carrinho -->
+      <Cart />
     </nav>
 
-    <!-- Carrinho -->
-    <Cart />
   </div>
 </template>
 

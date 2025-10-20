@@ -31,9 +31,6 @@
         Para saber mais, acesse:  
         <a href="https://www.lojaclicklivros.com.br" target="_blank">www.lojaclicklivros.com.br</a>
       </p>
-      <div id="divButton">
-        <RouterLink to="/" id="button">Voltar ao Inicio</RouterLink>
-      </div>
     </div>
   </div>
 </template>

@@ -1,14 +1,18 @@
 <template>
     <footer>
         <div id="txtFooter">
-            &copy; ClickLivros 2025
+            <p>&copy; ClickLivros 2025 | Todos os Direitos Reservados</p>
         </div>
         <div id="links">
-            <a href="#">Instagram</a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
             <p>|</p>
-            <a href="#">Whatsapp</a>
+            <a href="#"><i class="bi bi-whatsapp"></i></a>
             <p>|</p>
-            <a href="#">X</a>
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+        </div>
+        <div id="termos">
+            <RouterLink to="/termos">Termos de Uso</RouterLink>
+            <RouterLink to="/politica">Politica de Privacidade</RouterLink>
         </div>
     </footer>
 </template>
@@ -34,19 +38,27 @@ footer{
     flex-direction: row;
     gap: 20px;
 }
-#links a,
+a,
 #links p{
     color: white;
 }
-#links a{
+p{
+    cursor: default;
+}
+a{
     text-decoration: none;
 }
-#links a:hover{
+a:hover{
     text-decoration: underline;
 }
 #txtFooter{
     color: white;
     font-weight: bold;
     font-size: 1.3rem;
+}
+#termos{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
 }
 </style>
